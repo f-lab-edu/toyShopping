@@ -12,7 +12,8 @@ public class MemberRepository {
 
     // 회원 저장
     public MemberVO save(MemberVO memberVO) {
-        memberVO.setNum(++sequence);
+        sequence += 1;
+        memberVO.setNum(sequence);
         store.put(memberVO.getNum(), memberVO);
         return memberVO;
     }
