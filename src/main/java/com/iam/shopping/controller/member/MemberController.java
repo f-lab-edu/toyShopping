@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+    @Autowired
     private final MemberRepository memberRepository;
 
-    @Autowired
+
     public MemberController(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
