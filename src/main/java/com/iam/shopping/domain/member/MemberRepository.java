@@ -2,12 +2,12 @@ package com.iam.shopping.domain.member;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class MemberRepository {
-    private static final Map<Long, MemberVO> store = new HashMap<>();
+    private static final Map<Long, MemberVO> store = new ConcurrentHashMap<>();
     private static long sequence = 0L;
 
     // 회원 저장
