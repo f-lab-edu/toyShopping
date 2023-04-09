@@ -37,7 +37,7 @@ public class DBConfig {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
 
         bean.setDataSource(dataSource);
-        bean.setMapperLocations(applicationContext.getResources("classpath:/com/iam/shopping/mapper/*.xml"));
+        //bean.setMapperLocations(applicationContext.getResources("classpath:/mapper/*.xml"));
         //bean.setTypeAliasesPackage("com.iam.shopping.domain");
 
         return bean.getObject();

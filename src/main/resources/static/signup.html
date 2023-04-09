@@ -11,12 +11,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script>
         function goSignup() {
-            let fData = $("#frm").serialize();
+            // let fData = $("#frm").serialize();
+            let fData = {
+                "id": "test@naver.com",
+                "pass": "123",
+                "name": "DongHo",
+                "phone": "01048196169"
+            };
+            console.log(fData);
             $.ajax({
                 url: "member/signup",
                 type: "POST",
                 contentType: "application/json",
-                data: fData,
+                data: JSON.stringify(fData),
                 success: function () {
                     $(location).attr("href", "/index.html");
                 },
