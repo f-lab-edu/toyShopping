@@ -10,20 +10,18 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script>
-        function goSignup() {
+        function memberSignup() {
             // let fData = $("#frm").serialize();
-            let fData = {
-                "id": "test@naver.com",
-                "pass": "123",
-                "name": "DongHo",
-                "phone": "01048196169"
-            };
-            console.log(fData);
+            let id = $("#id").val();
+            let pass = $("#pass").val();
+            let name = $("#name").val();
+            let phone = $("#phone").val();
+
             $.ajax({
                 url: "member/signup",
                 type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(fData),
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({"id" : id, "pass": pass, "name" : name, "phone" : phone}),
                 success: function () {
                     $(location).attr("href", "/index.html");
                 },
@@ -62,7 +60,7 @@
                             <input type="tel" class="form-control" id="phone" name="phone" placeholder="휴대폰 번호">
                         </div>
                         <div class="d-grid col-12 mx-auto">
-                            <button class="btn btn-primary" type="button" onclick="goSignup()"><span></span> Sign up
+                            <button class="btn btn-primary" type="button" onclick="memberSignup()"><span></span> Sign up
                             </button>
                         </div>
                         <p class="text-center mt-3">Already have an account?
