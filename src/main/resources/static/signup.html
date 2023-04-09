@@ -5,9 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script>
+        function memberSignup() {
+            // let fData = $("#frm").serialize();
+            let id = $("#id").val();
+            let pass = $("#pass").val();
+            let name = $("#name").val();
+            let phone = $("#phone").val();
+
+            $.ajax({
+                url: "member/signup",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({"id" : id, "pass": pass, "name" : name, "phone" : phone}),
+                success: function () {
+                    $(location).attr("href", "/index.html");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    </script>
 </head>
 
 <body>
@@ -19,25 +42,25 @@
                     <h3 class="text-primary">회원가입</h3>
                 </div>
                 <div class="p-4">
-                    <form action="index.html" th:action method="post">
+                    <form id="frm">
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
-                            <input type="email" class="form-control" name="id" placeholder="아이디(이메일)">
+                            <input type="email" class="form-control" id="id" name="id" placeholder="아이디(이메일)">
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
-                            <input type="password" class="form-control" name="pass" placeholder="비밀번호">
+                            <input type="password" class="form-control" id="pass" name="pass" placeholder="비밀번호">
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-person-plus-fill text-white"></i></span>
-                            <input type="text" class="form-control" name="name" placeholder="이름">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="이름">
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-phone text-white"></i></span>
-                            <input type="tel" class="form-control" name="phone" placeholder="휴대폰 번호">
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="휴대폰 번호">
                         </div>
                         <div class="d-grid col-12 mx-auto">
-                            <button class="btn btn-primary" type="submit"><span></span> Sign up
+                            <button class="btn btn-primary" type="button" onclick="memberSignup()"><span></span> Sign up
                             </button>
                         </div>
                         <p class="text-center mt-3">Already have an account?
