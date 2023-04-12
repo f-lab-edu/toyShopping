@@ -18,61 +18,58 @@
 </head>
 <body>
 <script>
-    $(document).on("click", "#mainCate", () => {
-        let html = "<div class='input-group flex-nowrap'>";
+    function makeHtml() {
+        let html = "<div class='input-group flex-nowrap' id='categoryDepthDiv'>";
         html += "<span class='input-group-text'>카테고리분류</span>";
-        html += "<select id='cateDepth' class='form-select'>";
+        html += "<select class='form-select' id='categoryDepth'>";
         html += "<option value='1'>대분류</option>";
         html += "<option value='2'>중분류</option>";
         html += "<option value='3'>소분류</option>";
         html += "</select>";
         html += "</div>";
-        html += "<div class='input-group flex-nowrap' id='1stCate'>";
+        html += "<div class='input-group flex-nowrap' id='1stCategory'>";
         html += "<span class='input-group-text'>대분류</span>";
-        html += "<select class='form-select'>";
-        html += "<option value='1'>대분류카테고리목록</option>";
+        html += "<select class='form-select' id='1stCateSel'>";
         html += "</select>";
         html += "</div>";
-        html += "<div class='input-group flex-nowrap' id='2ndCate'>";
+        html += "<div class='input-group flex-nowrap' id='2ndCategory'>";
         html += "<span class='input-group-text'>중분류</span>";
-        html += "<select class='form-select'>";
-        html += "<option value='1'>중분류카테고리목록</option>";
+        html += "<select class='form-select' id='2ndCateSel'>";
         html += "</select>";
         html += "</div>";
         html += "<div>";
-        html += "<input type='text' id='cateNm' name='cateNm' placeholder='카테고리명'>";
-        html += "<button type='button' class='btn btn-primary btn-sm' id='insertCate' onclick='addCategory()'>등록";
+        html += "<input type='text' id='categoryNm' name='categoryNm' placeholder='카테고리명'>";
+        html += "<button type='button' class='btn btn-primary btn-sm' id='insertCategory' onclick='addCategory()'>등록";
         html += "</button>";
         html += "</div>";
         $("#inputForm").html(html);
-        $("#1stCate").hide();
-        $("#2ndCate").hide();
-    });
+        $("#1stCategory").hide();
+        $("#2ndCategory").hide();
+    }
 
-    $(document).on("#cateDepth").on("change", () => {
-        let depthVal = $("#cateDepth option:selected").val();
+    $(document).on("change", "#categoryDepth", () => {
+        let depthVal = $("#categoryDepth option:selected").val();
         if (depthVal == 1) {
-            $("#1stCate").hide();
-            $("#2ndCate").hide();
+            $("#1stCategory").hide();
+            $("#2ndCategory").hide();
         } else if (depthVal == 2) {
-            $("#1stCate").show();
-            $("#2ndCate").hide();
+            $("#1stCategory").show();
+            $("#2ndCategory").hide();
+            getCategory(depthVal - 1);
         } else if (depthVal == 3) {
-            $("#1stCate").show();
-            $("#2ndCate").show();
+            $("#1stCategory").show();
+            $("#2ndCategory").show();
+            get2ndCategory(depthVal - 1, $("#1stCategory option:selected").val());
         }
-    });
-
-    $(document).on("click", "#insertCate", () => {
-        let depth = $("#cateDepth option:selected").val();
-        let cateNm = $("#cateNm").val();
-        console.log(`${depth}과 ${cateNm}`);
     });
 
     function addCategory() {
         let category = {};
-        category.categoryId = $("#cateDepth option:selected").val();
-        category.categoryName = $("#cateNm").val();
+        category.depth = $("#categoryDepth option:selected").val();
+        category.categoryName = $("#categoryNm").val();
+        if (category.depth == 2) {
+            category.categoryParent = $("#1stCateSel option:selected").val();
+        }
         let jsonStr = JSON.stringify(category);
         console.log(jsonStr);
 
@@ -80,17 +77,66 @@
             url: "/category",
             type: "POST",
             contentType: "application/json;charset=utf-8",
-            data : jsonStr,
-            success : function () {
-                alert("성공");
+            data: jsonStr,
+            success: function () {
+                $("#categoryNm").val('');
+                alert("등록완료");
             },
-            error : function () {
-                alert("실패");
+            error: function () {
+                alert("error");
             }
         });
     }
+
+    function getCategory(paramNum) {
+        console.log("paramNum = " + paramNum);
+        $.ajax({
+            url: "/category/" + paramNum,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                makeView(data, paramNum);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function get2ndCategory(depth, categoryId) {
+        $.ajax({
+            url: `/category/${categoryId}`,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                // makeView(data, depth);
+                console.log(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function makeView(data, depth) {
+        let html = "";
+
+        if (depth == 1) {
+            $.each(data, function (index, obj) {
+                html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
+            })
+            $("#1stCateSel").html(html);
+        } else if (depth == 2) {
+            console.log($("#1stCateSel option:selected").val());
+            $.each(data, function (index, obj) {
+                html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
+            })
+            $("#2ndCateSel").html(html);
+        }
+    }
+
 </script>
-<main>
+<main id="main">
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <svg class="bi me-2" width="40" height="32">
@@ -109,12 +155,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-white">
-                    <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#speedometer2"></use>
-                    </svg>
-                    <span id="mainCate">카테고리관리</span>
-                </a>
+                <span id="mainCate" onclick="makeHtml()" style="cursor: pointer">카테고리관리</span>
             </li>
             <li>
                 <a href="#" class="nav-link text-white">
