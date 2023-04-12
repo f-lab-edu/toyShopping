@@ -20,40 +20,47 @@
 <body>
 <script>
     $(document).on("click", "#mainCate", () => {
-        let html = "<div>";
-        html += "<select id='cateDepth'>";
-        html += "<option value='1'>대분류";
-        html += "</option>";
-        html += "<option value='2'>중분류";
-        html += "</option>";
-        html += "<option value='3'>소분류";
-        html += "</option>";
+        let html = "<div class='input-group flex-nowrap'>";
+        html += "<span class='input-group-text'>카테고리분류</span>";
+        html += "<select id='cateDepth' class='form-select'>";
+        html += "<option value='1'>대분류</option>";
+        html += "<option value='2'>중분류</option>";
+        html += "<option value='3'>소분류</option>";
         html += "</select>";
-        html += "<select id='1stCate' style='display: none'>";
-        html += "<option value='1'>대분류카테고리목록";
-        html += "</option>";
+        html += "</div>";
+        html += "<div class='input-group flex-nowrap' id='1stCate'>";
+        html += "<span class='input-group-text'>대분류</span>";
+        html += "<select class='form-select'>";
+        html += "<option value='1'>대분류카테고리목록</option>";
         html += "</select>";
-        html += "<select id='2ndCate' style='display: none'>";
-        html += "<option value='1'>중분류카테고리목록";
-        html += "</option>";
+        html += "</div>";
+        html += "<div class='input-group flex-nowrap' id='2ndCate'>";
+        html += "<span class='input-group-text'>중분류</span>";
+        html += "<select class='form-select'>";
+        html += "<option value='1'>중분류카테고리목록</option>";
         html += "</select>";
+        html += "</div>";
+        html += "<div>";
         html += "<input type='text' id='cateNm' name='cateNm' placeholder='카테고리명'>";
         html += "<button type='button' class='btn btn-primary btn-sm' id='insertCate'>등록";
         html += "</button>";
         html += "</div>";
         $("#inputForm").html(html);
+        $("#1stCate").hide();
+        $("#2ndCate").hide();
     });
 
     $(document).on("#cateDepth").on("change", () => {
         let depthVal = $("#cateDepth option:selected").val();
         if (depthVal == 1) {
-            $("#1stCate").css("display", "none");
-            $("#2ndCate").css("display", "none");
+            $("#1stCate").hide();
+            $("#2ndCate").hide();
         } else if (depthVal == 2) {
-            $("#1stCate").css("display", "inline");
+            $("#1stCate").show();
+            $("#2ndCate").hide();
         } else if (depthVal == 3) {
-            $("#1stCate").css("display", "inline");
-            $("#2ndCate").css("display", "inline");
+            $("#1stCate").show();
+            $("#2ndCate").show();
         }
     });
 
@@ -69,7 +76,7 @@
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap"></use>
             </svg>
-            <span class="fs-4">Sidebar</span>
+            <span class="fs-4">목록으로</span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
