@@ -71,7 +71,7 @@
             category.categoryParent = $("#1stCateSel option:selected").val();
         }
         let jsonStr = JSON.stringify(category);
-        console.log(jsonStr);
+        console.log(`jsonStr> ${jsonStr}`);
 
         $.ajax({
             url: "/category",
@@ -88,14 +88,20 @@
         });
     }
 
-    function getCategory(paramNum) {
-        console.log("paramNum = " + paramNum);
+    function getCategory(depth) {
+        console.log("help" + $("#1stCateSel option:selected").val());
+
         $.ajax({
-            url: "/category/" + paramNum,
+            url: "/category",
             type: "GET",
+            data: {
+                depth: depth,
+                categoryId: $("#1stCateSel option:selected").val()
+            },
             dataType: "json",
             success: function (data) {
-                makeView(data, paramNum);
+                //makeView(data);
+                console.log(data);
             },
             error: function () {
                 alert("error");

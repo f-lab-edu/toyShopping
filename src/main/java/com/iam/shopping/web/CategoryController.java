@@ -17,9 +17,19 @@ public class CategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(value = "/{paramNum}", method = RequestMethod.GET)
-    public List<Category> category1stList(@PathVariable("paramNum") int dept) {
-        return categoryService.categoryList(dept);
+//    @RequestMapping(value = "/{paramNum}", method = RequestMethod.GET)
+//    public List<Category> category1stList(@PathVariable("paramNum") int dept) {
+////        return categoryService.categoryList(dept);
+//        return null;
+//    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List<Category> categoryList(@RequestParam("depth") int depth
+                                     , @RequestParam(value = "categoryId", required = false, defaultValue = "0") int categoryId) {
+//        return categoryService.categoryList(dept);
+        logger.info("category depth = {}", depth);
+        logger.info("category categoryId = {}", categoryId);
+        return null;
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
