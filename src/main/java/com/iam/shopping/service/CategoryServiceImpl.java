@@ -6,17 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
-
     @Override
-    public List<Category> categoryList(int paramNum) {
-        List<Category> categories = categoryMapper.categoryList(paramNum);
-        return categories;
+    public List<Category> getCategoryList(Map<String, Integer> categoryMap) {
+        return categoryMapper.getCategoryList(categoryMap);
     }
 
     @Override

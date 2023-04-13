@@ -55,23 +55,64 @@
         } else if (depthVal == 2) {
             $("#1stCategory").show();
             $("#2ndCategory").hide();
-            getCategory(depthVal - 1);
         } else if (depthVal == 3) {
             $("#1stCategory").show();
             $("#2ndCategory").show();
-            get2ndCategory(depthVal - 1, $("#1stCategory option:selected").val());
         }
+        getCategory(1);
     });
+
+    $(document).on("change", "#1stCateSel", () => {
+        let categoryId = $("#1stCateSel option:selected").val();
+        if (categoryId == null || categoryId == '') {
+            let html = "<select class='form-select' id='2ndCateSel'>";
+            html += "</select>";
+            $("#2ndCateSel").html(html);
+            return false;
+        }
+        get2ndCategory(categoryId);
+    });
+
+    function getCategory(depth) {
+        $.ajax({
+            url: `/category/${depth}`,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                make1stView(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function get2ndCategory(categoryId, depth = 1) {
+        $.ajax({
+            url: `/category/${depth}/${categoryId}`,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                make2ndView(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
 
     function addCategory() {
         let category = {};
         category.depth = $("#categoryDepth option:selected").val();
         category.categoryName = $("#categoryNm").val();
+
         if (category.depth == 2) {
             category.categoryParent = $("#1stCateSel option:selected").val();
+        } else if (category.depth == 3) {
+            category.categoryParent = $("#2ndCateSel option:selected").val();
         }
+
         let jsonStr = JSON.stringify(category);
-        console.log(`jsonStr> ${jsonStr}`);
 
         $.ajax({
             url: "/category",
@@ -79,7 +120,7 @@
             contentType: "application/json;charset=utf-8",
             data: jsonStr,
             success: function () {
-                $("#categoryNm").val('');
+                $("#categoryNm").val(''); // 초기화
                 alert("등록완료");
             },
             error: function () {
@@ -88,57 +129,22 @@
         });
     }
 
-    function getCategory(depth) {
-        console.log("help" + $("#1stCateSel option:selected").val());
-
-        $.ajax({
-            url: "/category",
-            type: "GET",
-            data: {
-                depth: depth,
-                categoryId: $("#1stCateSel option:selected").val()
-            },
-            dataType: "json",
-            success: function (data) {
-                //makeView(data);
-                console.log(data);
-            },
-            error: function () {
-                alert("error");
-            }
-        });
-    }
-
-    function get2ndCategory(depth, categoryId) {
-        $.ajax({
-            url: `/category/${categoryId}`,
-            type: "GET",
-            dataType: "json",
-            success: function (data) {
-                // makeView(data, depth);
-                console.log(data);
-            },
-            error: function () {
-                alert("error");
-            }
-        });
-    }
-
-    function makeView(data, depth) {
+    function make1stView(data) {
         let html = "";
+        html += "<option value=''>-선택-</option>";
+        $.each(data, function (index, obj) {
+            html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
+        })
+        $("#1stCateSel").html(html);
+    }
 
-        if (depth == 1) {
-            $.each(data, function (index, obj) {
-                html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
-            })
-            $("#1stCateSel").html(html);
-        } else if (depth == 2) {
-            console.log($("#1stCateSel option:selected").val());
-            $.each(data, function (index, obj) {
-                html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
-            })
-            $("#2ndCateSel").html(html);
-        }
+    function make2ndView(data) {
+        let html = "";
+        html += "<option value=''>-선택-</option>";
+        $.each(data, function (index, obj) {
+            html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
+        })
+        $("#2ndCateSel").html(html);
     }
 
 </script>
