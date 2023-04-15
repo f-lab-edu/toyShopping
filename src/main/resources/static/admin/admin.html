@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ADMIN</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="./sidebars.css">
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Shopping</title>
+</head>
+<body>
+<script>
+    function makeHtml() {
+        let html = "<div class='input-group flex-nowrap' id='categoryDepthDiv'>";
+        html += "<span class='input-group-text'>카테고리분류</span>";
+        html += "<select class='form-select' id='categoryDepth'>";
+        html += "<option value='1'>대분류</option>";
+        html += "<option value='2'>중분류</option>";
+        html += "<option value='3'>소분류</option>";
+        html += "</select>";
+        html += "</div>";
+        html += "<div class='input-group flex-nowrap' id='1stCategory'>";
+        html += "<span class='input-group-text'>대분류</span>";
+        html += "<select class='form-select' id='1stCateSel'>";
+        html += "</select>";
+        html += "</div>";
+        html += "<div class='input-group flex-nowrap' id='2ndCategory'>";
+        html += "<span class='input-group-text'>중분류</span>";
+        html += "<select class='form-select' id='2ndCateSel'>";
+        html += "</select>";
+        html += "</div>";
+        html += "<div>";
+        html += "<input type='text' id='categoryNm' name='categoryNm' placeholder='카테고리명'>";
+        html += "<button type='button' class='btn btn-primary btn-sm' id='insertCategory' onclick='addCategory()'>등록";
+        html += "</button>";
+        html += "</div>";
+        $("#inputForm").html(html);
+        $("#1stCategory").hide();
+        $("#2ndCategory").hide();
+    }
+
+    $(document).on("change", "#categoryDepth", () => {
+        let depthVal = $("#categoryDepth option:selected").val();
+        if (depthVal == 1) {
+            $("#1stCategory").hide();
+            $("#2ndCategory").hide();
+        } else if (depthVal == 2) {
+            $("#1stCategory").show();
+            $("#2ndCategory").hide();
+        } else if (depthVal == 3) {
+            $("#1stCategory").show();
+            $("#2ndCategory").show();
+        }
+        getCategory(1);
+    });
+
+    $(document).on("change", "#1stCateSel", () => {
+        let categoryId = $("#1stCateSel option:selected").val();
+        if (categoryId == null || categoryId == '') {
+            let html = "<select class='form-select' id='2ndCateSel'>";
+            html += "</select>";
+            $("#2ndCateSel").html(html);
+            return false;
+        }
+        get2ndCategory(categoryId);
+    });
+
+    function getCategory(depth) {
+        $.ajax({
+            url: `/category/${depth}`,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                make1stView(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function get2ndCategory(categoryId, depth = 1) {
+        $.ajax({
+            url: `/category/${depth}/${categoryId}`,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                make2ndView(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function addCategory() {
+        let category = {};
+        category.depth = $("#categoryDepth option:selected").val();
+        category.categoryName = $("#categoryNm").val();
+
+        if (category.depth == 2) {
+            category.categoryParent = $("#1stCateSel option:selected").val();
+        } else if (category.depth == 3) {
+            category.categoryParent = $("#2ndCateSel option:selected").val();
+        }
+
+        let jsonStr = JSON.stringify(category);
+
+        $.ajax({
+            url: "/category",
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            data: jsonStr,
+            success: function () {
+                $("#categoryNm").val(''); // 초기화
+                alert("등록완료");
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function make1stView(data) {
+        let html = "";
+        html += "<option value=''>-선택-</option>";
+        $.each(data, function (index, obj) {
+            html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
+        })
+        $("#1stCateSel").html(html);
+    }
+
+    function make2ndView(data) {
+        let html = "";
+        html += "<option value=''>-선택-</option>";
+        $.each(data, function (index, obj) {
+            html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
+        })
+        $("#2ndCateSel").html(html);
+    }
+
+</script>
+<main id="main">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <svg class="bi me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
+            <span class="fs-4">목록으로</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" aria-current="page">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#home"></use>
+                    </svg>
+                    상품등록
+                </a>
+            </li>
+            <li>
+                <span id="mainCate" onclick="makeHtml()" style="cursor: pointer">카테고리관리</span>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#people-circle"></use>
+                    </svg>
+                    회원관리
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+               id="dropdownUser1"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                <strong>mdo</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="#">New project...</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="p-4" id="inputForm">
+    </div>
+</main>
+</body>
+</html>

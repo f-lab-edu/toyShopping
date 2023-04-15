@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iam.shopping.mapper.CategoryMapper">
+
+    <select id="getCategoryList" parameterType="Integer" resultType="com.iam.shopping.domain.Category">
+        select depth
+             , categoryId
+             , categoryName
+             , categoryParent
+        from   category
+        where  1=1
+        <if test="depth != null and depth != ''">and depth = #{depth}</if>
+        <if test="categoryParent != null and categoryParent != ''">and categoryParent = #{categoryParent}</if>
+    </select>
+
+    <insert id="categoryInsert" parameterType="com.iam.shopping.domain.Category">
+        insert into category ( depth
+                             , categoryName
+                             , categoryParent)
+        value ( #{depth}
+              , #{categoryName}
+              , #{categoryParent})
+    </insert>
+
+</mapper>
