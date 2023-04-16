@@ -2,10 +2,7 @@ package com.iam.shopping.dto;
 
 public class CategoryDTO {
     private int depth;
-    private String categoryId;
     private String categoryName;
-    private String wholeCategoryId;
-    private String wholeCategoryName;
     private String parentCategoryId;
     private String parentCategoryName;
 
