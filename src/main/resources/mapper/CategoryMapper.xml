@@ -2,24 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.iam.shopping.mapper.CategoryMapper">
 
-    <select id="getCategoryList" parameterType="Integer" resultType="com.iam.shopping.domain.Category">
+    <select id="getCategoryList" parameterType="Map" resultType="com.iam.shopping.domain.Category">
         select depth
              , categoryId
              , categoryName
-             , categoryParent
+             , wholeCategoryId
+             , wholeCategoryName
         from   category
         where  1=1
         <if test="depth != null and depth != ''">and depth = #{depth}</if>
-        <if test="categoryParent != null and categoryParent != ''">and categoryParent = #{categoryParent}</if>
+        <if test="parentCategoryId != null and parentCategoryId != ''">and wholeCategoryId like concat('%', #{parentCategoryId}, '%')</if>
     </select>
 
-    <insert id="categoryInsert" parameterType="com.iam.shopping.domain.Category">
+    <insert id="insertCategory" parameterType="Map">
         insert into category ( depth
+                             , categoryId
                              , categoryName
-                             , categoryParent)
+                             , wholeCategoryId
+                             , wholeCategoryName)
         value ( #{depth}
+              , (select categoryId
+                 from   (select LPAD(IFNULL(MAX(categoryId), '0') + 1, 5, '0') as categoryId
+                         from   category) tmp)
               , #{categoryName}
-              , #{categoryParent})
+              , (select concat(#{parentCategoryId}, categoryId) as wholeCategoryId
+                 from   (select LPAD(IFNULL(MAX(categoryId), '0') + 1, 5, '0') as categoryId
+                         from   category) tmp)
+              , concat(#{parentCategoryName}, #{categoryName}))
     </insert>
 
 </mapper>

@@ -63,14 +63,14 @@
     });
 
     $(document).on("change", "#1stCateSel", () => {
-        let categoryId = $("#1stCateSel option:selected").val();
-        if (categoryId == null || categoryId == '') {
+        let parentCategoryId = $("#1stCateSel option:selected").val();
+        if (parentCategoryId == null || parentCategoryId == '') {
             let html = "<select class='form-select' id='2ndCateSel'>";
             html += "</select>";
             $("#2ndCateSel").html(html);
             return false;
         }
-        get2ndCategory(categoryId);
+        get2ndCategory(parentCategoryId);
     });
 
     function getCategory(depth) {
@@ -87,9 +87,9 @@
         });
     }
 
-    function get2ndCategory(categoryId, depth = 1) {
+    function get2ndCategory(parentCategoryId, depth = 2) {
         $.ajax({
-            url: `/category/${depth}/${categoryId}`,
+            url: `/category/${depth}/${parentCategoryId}`,
             type: "GET",
             dataType: "JSON",
             success: function (data) {
@@ -106,10 +106,21 @@
         category.depth = $("#categoryDepth option:selected").val();
         category.categoryName = $("#categoryNm").val();
 
-        if (category.depth == 2) {
-            category.categoryParent = $("#1stCateSel option:selected").val();
+        if (category.depth == 1) {
+            category.parentCategoryId = '';
+            category.parentCategoryName = '';
+            if (isNullValue($("#categoryNm").val(), "카테고리명")) return false;
+        } else if (category.depth == 2) {
+            category.parentCategoryId = $("#1stCateSel option:selected").val() + '>';
+            category.parentCategoryName = $("#1stCateSel option:selected").text() + '>';
+            if (isNullValue($("#1stCateSel option:selected").val(), "대분류")) return false;
+            if (isNullValue($("#categoryNm").val(), "카테고리명")) return false;
         } else if (category.depth == 3) {
-            category.categoryParent = $("#2ndCateSel option:selected").val();
+            category.parentCategoryId = $("#1stCateSel option:selected").val() + '>' + $("#2ndCateSel option:selected").val() + '>';
+            category.parentCategoryName = $("#1stCateSel option:selected").text() + '>' + $("#2ndCateSel option:selected").text() + '>';
+            if (isNullValue($("#1stCateSel option:selected").val(), "대분류")) return false;
+            if (isNullValue($("#2ndCateSel option:selected").val(), "중분류")) return false;
+            if (isNullValue($("#categoryNm").val(), "카테고리명")) return false;
         }
 
         let jsonStr = JSON.stringify(category);
@@ -119,7 +130,7 @@
             type: "POST",
             contentType: "application/json;charset=utf-8",
             data: jsonStr,
-            success: function () {
+            success: function (data) {
                 $("#categoryNm").val(''); // 초기화
                 alert("등록완료");
             },
@@ -145,6 +156,13 @@
             html += "<option value='" + obj.categoryId + "'>" + obj.categoryName + "</option>";
         })
         $("#2ndCateSel").html(html);
+    }
+
+    function isNullValue(value, message) {
+        if (value == null || value == '') {
+            alert(`${message}을 입력해주세요.`);
+            return true;
+        }
     }
 
 </script>
