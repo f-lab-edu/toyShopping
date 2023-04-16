@@ -17,9 +17,11 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource("classpath:/application.properties")
 public class DBConfig {
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    public DBConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
@@ -39,7 +41,6 @@ public class DBConfig {
         bean.setDataSource(dataSource);
         //bean.setMapperLocations(applicationContext.getResources("classpath:/mapper/*.xml"));
         //bean.setTypeAliasesPackage("com.iam.shopping.domain");
-
         return bean.getObject();
     }
 
