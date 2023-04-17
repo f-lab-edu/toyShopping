@@ -18,18 +18,18 @@ public class CategoryService {
     }
 
     public List<Category> categoryList(CategoryDTO categoryDTO) {
-        Map<String, Object> categoryMap = new HashMap<>();
-        categoryMap.put("depth", categoryDTO.getDepth());
-        categoryMap.put("parentCategoryId", categoryDTO.getParentCategoryId());
+        Map<String, Object> categoryMap = Map.of("depth", categoryDTO.getDepth()
+                , "parentCategoryId", categoryDTO.getParentCategoryId() == null ? "" : categoryDTO.getParentCategoryId()
+        );
         return categoryMapper.getCategoryList(categoryMap);
     }
 
     public void categoryInsert(CategoryDTO categoryDTO) {
-        Map<String, Object> categoryMap = new HashMap<>();
-        categoryMap.put("depth", categoryDTO.getDepth());
-        categoryMap.put("categoryName", categoryDTO.getCategoryName());
-        categoryMap.put("parentCategoryId", categoryDTO.getParentCategoryId());
-        categoryMap.put("parentCategoryName", categoryDTO.getParentCategoryName());
+        Map<String, Object> categoryMap = Map.of("depth", categoryDTO.getDepth()
+                , "categoryName", categoryDTO.getCategoryName()
+                , "parentCategoryId", categoryDTO.getParentCategoryId()
+                , "parentCategoryName", categoryDTO.getParentCategoryName()
+        );
         categoryMapper.insertCategory(categoryMap);
     }
 }
