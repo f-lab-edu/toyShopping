@@ -18,16 +18,6 @@ public class MemberController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public Member memberInfo() {
-        Member member = new Member();
-        member.setId("test@naver.com");
-        member.setPass("1234");
-        member.setName("이동호");
-        member.setPhone("010-4819-6169");
-        logger.info("INFO LEVEL 테스트");
-        return member;
-    }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public void memberSignupPOST(@RequestBody Member member) {

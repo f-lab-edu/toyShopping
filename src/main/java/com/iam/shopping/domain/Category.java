@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class Category {
     private int depth;
-    private int categoryId;
+    private String categoryId;
     private String categoryName;
-    private String categoryParent;
+    private String wholeCategoryId;
+    private String wholeCategoryName;
 }
