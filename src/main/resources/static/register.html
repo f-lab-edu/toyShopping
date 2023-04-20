@@ -18,7 +18,7 @@
             let phone = $("#phone").val();
 
             $.ajax({
-                url: "member/signup",
+                url: "/member/signup",
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 data: JSON.stringify({"id" : id, "pass": pass, "name" : name, "phone" : phone}),

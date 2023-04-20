@@ -165,6 +165,56 @@
         }
     }
 
+    function makeMemberView() {
+        $.ajax({
+            url: `/member/memberList`,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                let memberHtml = "<div id='memberPage' style='width: 1000px'>";
+                memberHtml += "<table class='table'>";
+                memberHtml += "<thead class='table-light'>";
+                memberHtml += "<tr>";
+                memberHtml += "<th scope='col'>No</th>";
+                memberHtml += "<th scope='col'>아이디</th>";
+                memberHtml += "<th scope='col'>비밀번호</th>";
+                memberHtml += "<th scope='col'>이름</th>";
+                memberHtml += "<th scope='col'>휴대폰 번호</th>";
+                memberHtml += "<th scope='col'></th>";
+                memberHtml += "</tr>";
+                memberHtml += "</thead>";
+                $.each(data, (index, obj) => {
+                    memberHtml += "<tbody>";
+                    memberHtml += "<tr>";
+                    memberHtml += `<td>${index + 1}</td>`;
+                    memberHtml += `<td>${obj.id}</td>`;
+                    memberHtml += `<td>${obj.pass}</td>`;
+                    memberHtml += `<td>${obj.name}</td>`;
+                    memberHtml += `<td>${obj.phone}</td>`;
+                    memberHtml += `<td><input type="button" value="삭제" class="btn btn-warning" onclick="deleteMember('${obj.id}')"></td>`;
+                    memberHtml += "</tr>";
+                    memberHtml += "</tbody>";
+                });
+                memberHtml += "</table>";
+                $("#inputForm").html(memberHtml);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function deleteMember(id) {
+        console.log(id);
+        $.ajax({
+            url: "/member/"+id,
+            type: "DELETE",
+            success: makeMemberView,
+            error: function () {
+                alert("error");
+            }
+        });
+    }
 </script>
 <main id="main">
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -188,12 +238,7 @@
                 <span id="mainCate" onclick="makeHtml()" style="cursor: pointer">카테고리관리</span>
             </li>
             <li>
-                <a href="#" class="nav-link text-white">
-                    <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#people-circle"></use>
-                    </svg>
-                    회원관리
-                </a>
+                <span id="member" onclick="makeMemberView()" style="cursor: pointer">회원관리</span>
             </li>
         </ul>
         <hr>
