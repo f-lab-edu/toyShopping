@@ -11,7 +11,7 @@
         order by reg_date asc
     </select>
 
-    <insert id="insertMember" parameterType="com.iam.shopping.domain.Member">
+    <insert id="insertMember" parameterType="Map">
         insert into member ( id
                            , pass
                            , name

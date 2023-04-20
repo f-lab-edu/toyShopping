@@ -10,6 +10,6 @@ import java.util.Map;
 @Mapper
 public interface MemberMapper {
     public List<Member> selectMember();
-    public void insertMember(Member member);
-    public void deleteMember(Map<String, Object> memberMap);
+    public int insertMember(Map<String, Object> memberMap);
+    public int deleteMember(Map<String, Object> memberMap);
 }
