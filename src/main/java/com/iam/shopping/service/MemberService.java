@@ -32,7 +32,6 @@ public class MemberService {
 
     public void memberDelete(MemberDTO memberDTO) {
         Map<String, Object> memberMap = Map.of("id", memberDTO.getId());
-        System.out.println("삭제여부>" + memberDTO.isTest());
         if (memberDTO.isTest()) return;
         int isSuccess = memberMapper.deleteMember(memberMap);
     }
