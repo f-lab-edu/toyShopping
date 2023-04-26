@@ -118,7 +118,6 @@
             type: "GET",
             dataType: "JSON",
             success: function (data) {
-                console.log(data);
                 make3ndView(data);
             },
             error: function () {
@@ -286,8 +285,8 @@
         itemHtml += "<input class='form-control' type='file' id='inputFile' name='file'>";
         itemHtml += "</div>";
         itemHtml += "</div>";
-        itemHtml += "<button class='btn btn-primary' onclick='registerItem()'>상품등록</button>";
         itemHtml += "</form>";
+        itemHtml += "<button class='btn btn-primary' onclick='registerItem()'>상품등록</button>";
         $("#inputForm").html(itemHtml);
         getCategory(1);
     }
@@ -300,7 +299,7 @@
         let itemData = {
             "itemName" : $("#inputItemName").val(),
             "price" : $("#inputPrice").val(),
-            "category" : $("#3ndCateSel").val()
+            "categoryId" : $("#3ndCateSel").val()
         }
 
         // 파일의 content-type은 multipart/form-data이기 때문에 JSON과 같이 쓸 수 없다. -> append로 추가
@@ -308,7 +307,7 @@
         formData.append("file", fileImg);
 
         $.ajax({
-            url: "/test",
+            url: "/item/add",
             type: "POST",
             processData: false, // formData를 string으로 변환하지 않음
             contentType: false, // content-type 헤더가 multipart/form-data로 전송

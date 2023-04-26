@@ -8,4 +8,6 @@ public class Item {
     private String itemName;
     private int price;
     private String categoryId;
+    private String uploadFilename;
+    private String originalFilename;
 }
