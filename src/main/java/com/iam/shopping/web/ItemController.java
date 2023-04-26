@@ -34,13 +34,6 @@ public class ItemController {
         // 파일저장
         UploadFile uploadFile = fileUploadService.uploadFile(multipartFile);
         itemDTO.setUploadFile(uploadFile);
-
-        logger.info("itemName = {}", itemDTO.getItemName());
-        logger.info("itemPrice = {}", itemDTO.getPrice());
-        logger.info("itemCategoryId = {}", itemDTO.getCategoryId());
-        logger.info("uploadFile = {}", itemDTO.getUploadFile().getUploadFilename());
-        logger.info("uploadFile = {}", itemDTO.getUploadFile().getOriginalFilename());
-
         itemService.addItem(itemDTO);
     }
 }
