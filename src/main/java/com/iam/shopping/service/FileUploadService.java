@@ -31,10 +31,11 @@ public class FileUploadService {
             return null;
         }
 
-        String originalFilename = multipartFile.getOriginalFilename();
-        String uploadFilename = createUploadFileName(originalFilename);
-        // 해당 경로에 파일저장
-        multipartFile.transferTo(new File(getFileFullPath(uploadFilename)));
+        String originalFilename = multipartFile.getOriginalFilename(); // 원본파일명
+        String uploadFilename = createUploadFileName(originalFilename); // uuid 붙은 파일명
+
+        // uploadFilename + property file path
+        multipartFile.transferTo(new File(getFileFullPath(uploadFilename))); // 파일저장
         return new UploadFile(uploadFilename, originalFilename);
     }
 }
