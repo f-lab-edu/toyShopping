@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-@PropertySource("classpath:/application.properties")
+//@PropertySource("classpath:/application.properties")
 public class FileUploadService {
     @Value("${file.path}")
     private String filePath;
