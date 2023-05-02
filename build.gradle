@@ -35,6 +35,9 @@ dependencies {
 
 	// swagger-ui
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+	// log
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 }
 
 tasks.named('test') {
