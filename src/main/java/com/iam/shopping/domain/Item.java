@@ -1,7 +1,6 @@
 package com.iam.shopping.domain;
 
 import lombok.Data;
-import org.springframework.core.io.Resource;
 
 @Data
 public class Item {

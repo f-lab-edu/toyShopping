@@ -1,6 +1,5 @@
 package com.iam.shopping.dto;
 
-import com.iam.shopping.domain.UploadFile;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
