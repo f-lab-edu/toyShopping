@@ -33,11 +33,15 @@ public class ItemController {
         this.itemService = itemService;
     }
 
+    @Tag(name = "item")
+    @ApiOperation(value = "이미지경로조회", notes = "파일이름으로 이미지가 저장된 경로를 찾는다.")
     @RequestMapping(value = "/images/{filename}", method = RequestMethod.GET)
     public Resource getFilePath(@PathVariable String filename) throws MalformedURLException {
         return new UrlResource("file:" + fileUploadService.getFileFullPath(filename));
     }
 
+    @Tag(name = "item")
+    @ApiOperation(value = "상품조회", notes = "상품조회")
     @RequestMapping(value = "/item", method = RequestMethod.GET)
     public List<Item> getItemList() {
         List<Item> itemList = itemService.getItemList();
