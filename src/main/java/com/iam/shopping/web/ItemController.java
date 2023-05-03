@@ -1,5 +1,6 @@
 package com.iam.shopping.web;
 
+import com.iam.shopping.domain.Item;
 import com.iam.shopping.domain.UploadFile;
 import com.iam.shopping.dto.ItemDTO;
 import com.iam.shopping.service.FileUploadService;
@@ -9,18 +10,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "item", description = "상품 등록, 조회 API")
 @RestController
 @PropertySource("classpath:/application.properties")
-@RequestMapping("/item")
 public class ItemController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -32,13 +35,25 @@ public class ItemController {
         this.itemService = itemService;
     }
 
+    @RequestMapping(value = "/images/{filename}", method = RequestMethod.GET)
+    public Resource getFilePath(@PathVariable String filename) throws MalformedURLException {
+        return new UrlResource("file:" + fileUploadService.getFileFullPath(filename));
+    }
+
+    @RequestMapping(value = "/item", method = RequestMethod.GET)
+    public List<Item> getItemList() {
+        List<Item> itemList = itemService.getItemList();
+        return itemList;
+    }
+
     @Tag(name = "item")
     @ApiOperation(value = "상품등록", notes = "상품등록")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/item/add", method = RequestMethod.POST)
     public void saveItem(@RequestPart(name = "item") ItemDTO itemDTO, @RequestPart(name = "file") MultipartFile multipartFile) throws IOException {
         // 이미지파일저장
         UploadFile uploadFile = fileUploadService.uploadFile(multipartFile);
-        itemDTO.setUploadFile(uploadFile);
+        itemDTO.setUploadFilename(uploadFile.getUploadFilename());
+        itemDTO.setOriginalFilename(uploadFile.getOriginalFilename());
         itemService.addItem(itemDTO);
     }
 }

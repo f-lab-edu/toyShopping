@@ -8,6 +8,7 @@ import lombok.Data;
 @ApiOperation(value = "상품정보 및 이미지파일을 옮기기 위한 DTO", notes = "상품명, 상품가격, 카테고리, 업로드파일의 정보를 담아 전달한다.")
 @Data
 public class ItemDTO {
+    private String itemId;
     @Schema(description = "상품명", defaultValue = "상품A", required = true, example = "상품A")
     private String itemName;
 
@@ -17,5 +18,6 @@ public class ItemDTO {
     @Schema(description = "카테고리ID", defaultValue = "00012", required = true, example = "00012")
     private String categoryId;
 
-    private UploadFile uploadFile;
+    private String uploadFilename;
+    private String originalFilename;
 }
