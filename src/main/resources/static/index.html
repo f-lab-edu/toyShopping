@@ -17,10 +17,42 @@
     <title>Shopping</title>
 </head>
 <body>
+<script>
+    $(() => {
+        $.ajax({
+            url: "/item",
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                render(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    });
+
+    function render(data) {
+        console.log(data);
+        let html = "";
+        html += `<div class="row row-cols-4">`;
+        $.each(data, function (index, obj) {
+            html += `<div class="col">`;
+            html += `<img src=/images/${obj.uploadFile.uploadFilename} class="border" width="300" height="300">`;
+            html += `<div>${obj.price}원</div>`;
+            html += `<div>${obj.itemName}</div>`;
+            html += `</div>`;
+            console.log(`${index}번째 상품이름: ${obj.itemName}, 상품가격: ${obj.price}, 이미지경로: ${obj.filePath}`);
+        });
+        html += `</div>`;
+        $("#imageGrid").html(html);
+    }
+</script>
 <nav class="py-2 bg-light border-bottom">
     <div class="container d-flex flex-wrap">
         <ul class="nav me-auto">
-            <li class="nav-item"><a href="./admin/admin.html" class="nav-link link-dark px-2" aria-current="page">Admin</a></li>
+            <li class="nav-item"><a href="./admin/admin.html" class="nav-link link-dark px-2"
+                                    aria-current="page">Admin</a></li>
         </ul>
         <ul class="nav">
             <li class="nav-item"><a href="" class="nav-link link-dark px-2">Login</a></li>
@@ -31,13 +63,21 @@
 <header class="py-3 mb-4 border-bottom">
     <div class="container d-flex flex-wrap justify-content-center">
         <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-            <span class="fs-4">Double header</span>
+            <svg class="bi me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
+            <span class="fs-4">DONGHO SHOP</span>
         </a>
         <form class="col-12 col-lg-auto mb-3 mb-lg-0">
             <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
         </form>
     </div>
 </header>
+<section>
+    <div class="container">
+        <div id="imageGrid" class="row">
+        </div>
+    </div>
+</section>
 </body>
 </html>
