@@ -7,6 +7,6 @@
 /dataSources/
 /dataSources.local.xml
 
-# out/, build/ 제외
-out/
-build/
+# /out/, /build/ 제외
+/build/
+/out/
