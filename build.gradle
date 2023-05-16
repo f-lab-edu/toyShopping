@@ -23,6 +23,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.9'
+
 	// Lombok API
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

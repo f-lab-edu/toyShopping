@@ -1,8 +1,10 @@
 package com.iam.shopping.domain;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Item {
     private String itemId;
     private String itemName;
@@ -10,11 +12,4 @@ public class Item {
     private String categoryId;
     private UploadFile uploadFile;
 
-    public Item(String itemId, String itemName, int price, String categoryId, UploadFile uploadFile) {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.price = price;
-        this.categoryId = categoryId;
-        this.uploadFile = uploadFile;
-    }
 }

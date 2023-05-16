@@ -10,8 +10,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Tag(name = "member", description = "회원 등록, 조회 및 삭제 API")
@@ -36,8 +41,15 @@ public class MemberController {
     @Tag(name = "member")
     @ApiOperation(value = "회원가입", notes = "회원가입")
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public void signUp(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity signUp(@Validated @RequestBody MemberDTO memberDTO, BindingResult bindingResult) {
+
+        // 검증 실패 시
+        if (bindingResult.hasErrors()) {
+            logger.info("errors={}", bindingResult);
+            return new ResponseEntity(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
         memberService.memberRegister(memberDTO);
+        return new ResponseEntity(memberDTO, HttpStatus.OK);
     }
 
     @Tag(name = "member")

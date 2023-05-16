@@ -1,0 +1,3 @@
+# /out/, /build/ 제외
+/build/
+/out/

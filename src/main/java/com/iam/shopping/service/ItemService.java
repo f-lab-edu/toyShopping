@@ -23,11 +23,13 @@ public class ItemService {
     public List<Item> getItemList() {
         List<ItemDTO> items = itemMapper.selectItem();
         List<Item> itemList = items.stream()
-                .map(itemDTO -> new Item(itemDTO.getItemId()
-                        , itemDTO.getItemName()
-                        , itemDTO.getPrice()
-                        , itemDTO.getCategoryId()
-                        , new UploadFile(itemDTO.getUploadFilename(), itemDTO.getOriginalFilename())))
+                .map(itemDTO -> Item.builder()
+                        .itemId(itemDTO.getItemId())
+                        .itemName(itemDTO.getItemName())
+                        .price(itemDTO.getPrice())
+                        .categoryId(itemDTO.getCategoryId())
+                        .uploadFile(new UploadFile(itemDTO.getUploadFilename(), itemDTO.getOriginalFilename()))
+                        .build())
                 .collect(Collectors.toList());
         return itemList;
     }
