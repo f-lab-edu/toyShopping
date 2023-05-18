@@ -291,15 +291,61 @@
         getCategory(1);
     }
 
+    function makeItemErrorView(errMessage) {
+        let itemerrorHtml = "<form id='frm' enctype='multipart/form-data'>";
+        itemerrorHtml += "<div class='row mb-3'>";
+        itemerrorHtml += "<label for='inputItemName' class='col-sm-2 col-form-label'>상품명</label>";
+        itemerrorHtml += "<div class='col-sm-10'>";
+        itemerrorHtml += "<input class='form-control' id='inputItemName' type='text' name='itemName'>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "<div class='row mb-3'>";
+        itemerrorHtml += "<label for='inputPrice' class='col-sm-2 col-form-label'>가격</label>";
+        itemerrorHtml += "<div class='col-sm-10'>";
+        itemerrorHtml += "<input class='form-control' id='inputPrice' type='text' name='price'>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "<div class='row mb-3 flex-nowrap' id='1stCategory'>";
+        itemerrorHtml += "<label for='1stCateSel' class='col-sm-2 col-form-label'>대분류</label>";
+        itemerrorHtml += "<select class='form-select' id='1stCateSel'>";
+        itemerrorHtml += "</select>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "<div class='row mb-3 flex-nowrap' id='2ndCategory'>";
+        itemerrorHtml += "<label for='2ndCateSel' class='col-sm-2 col-form-label'>중분류</label>";
+        itemerrorHtml += "<select class='col-sm-2 form-select' id='2ndCateSel'>";
+        itemerrorHtml += "</select>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "<div class='row mb-3 flex-nowrap' id='3ndCategory'>";
+        itemerrorHtml += "<label for='3ndCateSel' class='col-sm-2 col-form-label'>소분류</label>";
+        itemerrorHtml += "<select class='col-sm-2 form-select' id='3ndCateSel'>";
+        itemerrorHtml += "</select>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "<div class='row mb-3'>";
+        itemerrorHtml += "<label for='inputFile' class='col-sm-2 col-form-label'>이미지파일</label>";
+        itemerrorHtml += "<div class='col-sm-10'>";
+        itemerrorHtml += "<input class='form-control' type='file' id='inputFile' name='file'>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "<div class='row mb-3'>";
+        itemerrorHtml += "<div class='col-sm-10'>";
+        itemerrorHtml += "<span style='color: red'>"+ errMessage.message +"</span>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "</div>";
+        itemerrorHtml += "</form>";
+        itemerrorHtml += "<button class='btn btn-primary' onclick='registerItem()'>상품등록</button>";
+        $("#inputForm").html(itemerrorHtml);
+        getCategory(1);
+    }
+
     function registerItem() {
         // FormData(); -> ajax fileupload
         // let frm = $("#frm")[0];
         let fileImg = $("#inputFile")[0].files[0];
         let formData = new FormData();
         let itemData = {
-            "itemName" : $("#inputItemName").val(),
-            "price" : $("#inputPrice").val(),
-            "categoryId" : $("#3ndCateSel").val()
+            "itemName": $("#inputItemName").val(),
+            "price": $("#inputPrice").val(),
+            "categoryId": $("#3ndCateSel").val()
         }
 
         // 파일의 content-type은 multipart/form-data이기 때문에 JSON과 같이 쓸 수 없다. -> append로 추가
@@ -315,8 +361,10 @@
             success: function () {
                 alert("등록완료");
             },
-            error: function () {
-                alert("error");
+            error: function (request, status, error) {
+                var errMessage = JSON.parse(request.responseText);
+                makeItemErrorView(errMessage);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             }
         });
     }
