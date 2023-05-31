@@ -1,6 +1,7 @@
 package com.iam.shopping.exhandler;
 
 import com.iam.shopping.exception.FileExtensionException;
+import com.iam.shopping.exception.LoginException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 @RestControllerAdvice
 @Slf4j
 public class ExController {
-    
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ErrorResult fileNullExHandler(MissingServletRequestPartException e) {
@@ -54,6 +55,16 @@ public class ExController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(LoginException.class)
+    public ErrorResult loginExHandler(LoginException e) {
+        log.error("error", e);
+        return ErrorResult.builder()
+                .code("400")
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public ErrorResult exHandler(Exception e) {
         log.error("error", e);
@@ -62,4 +73,5 @@ public class ExController {
                 .message(e.getMessage())
                 .build();
     }
+
 }

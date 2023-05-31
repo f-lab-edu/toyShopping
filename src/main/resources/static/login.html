@@ -13,21 +13,58 @@
 
     <link href="./bootstrap/css/signin.css" rel="stylesheet">
 
+    <script>
+        function login() {
+            let loginId = $("#loginId").val();
+            let password = $("#password").val();
+
+            $.ajax({
+                url: "/login/",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({"loginId": loginId, "password": password}),
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (request, status, error) {
+                    console.log("request " + JSON.stringify(request));
+                    console.log("request " + request.responseText);
+                    if (error.status == 400) {
+                        $.each(error.responseJSON, function (index, obj) {
+                            if (obj.field == "loginId") {
+                                let errHtml = `<input type="email" class="form-control" id="loginId" placeholder="name@example.com">`;
+                                errHtml += `<label for="loginId">Email address</label>`;
+                                errHtml += `<span>${obj.defaultMessage}</span>`;
+                                $("#divId").html(errHtml);
+                            } else if (obj.field == "password") {
+                                let errHtml = `<input type="password" class="form-control" id="password" placeholder="Password">`;
+                                errHtml += `<label for="password">Password</label>`;
+                                errHtml += `<span>${obj.defaultMessage}</span>`;
+                                $("#divPass").html(errHtml);
+                            }
+                        })
+                    }
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                }
+            });
+        }
+    </script>
+
 </head>
 <body class="text-center">
 <main class="form-signin">
     <form>
         <h1 class="h3 mb-3 fw-normal">LOGIN</h1>
 
-        <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+        <div class="form-floating" id="divId">
+            <input type="email" class="form-control" id="loginId" placeholder="name@example.com">
+            <label for="loginId">Email address</label>
         </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+        <div class="form-floating" id="divPass">
+            <input type="password" class="form-control" id="password" placeholder="Password">
+            <label for="password">Password</label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <button class="w-100 btn btn-lg btn-primary" type="button" onclick="login()">Sign in</button>
         <p class="mt-5 mb-3 text-muted">&copy; DongHo-2023</p>
     </form>
 </main>
