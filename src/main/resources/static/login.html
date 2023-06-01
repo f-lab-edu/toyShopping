@@ -19,32 +19,17 @@
             let password = $("#password").val();
 
             $.ajax({
-                url: "/login/",
+                url: "/login",
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 data: JSON.stringify({"loginId": loginId, "password": password}),
-                success: function (data) {
-                    console.log(data);
+                success: function () {
+                    $(location).attr("href", "/index.html");
                 },
-                error: function (request, status, error) {
-                    console.log("request " + JSON.stringify(request));
-                    console.log("request " + request.responseText);
-                    if (error.status == 400) {
-                        $.each(error.responseJSON, function (index, obj) {
-                            if (obj.field == "loginId") {
-                                let errHtml = `<input type="email" class="form-control" id="loginId" placeholder="name@example.com">`;
-                                errHtml += `<label for="loginId">Email address</label>`;
-                                errHtml += `<span>${obj.defaultMessage}</span>`;
-                                $("#divId").html(errHtml);
-                            } else if (obj.field == "password") {
-                                let errHtml = `<input type="password" class="form-control" id="password" placeholder="Password">`;
-                                errHtml += `<label for="password">Password</label>`;
-                                errHtml += `<span>${obj.defaultMessage}</span>`;
-                                $("#divPass").html(errHtml);
-                            }
-                        })
-                    }
-                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                error: function (request) {
+                    let responseText = JSON.parse(request.responseText);
+                    let errMessage = responseText.message;
+                    alert(errMessage);
                 }
             });
         }

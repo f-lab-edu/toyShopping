@@ -41,8 +41,9 @@ class LoginControllerTest {
         String content = objectMapper.writeValueAsString(new LoginDTO("dho0647@naver.com", "12345"));
 
         mockMvc.perform(post("/login")
+                        .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
